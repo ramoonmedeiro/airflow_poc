@@ -1,7 +1,25 @@
+import requests
+import json
+import pandas as pd
+import numpy as np
+
 from airflow import DAG
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.sensors.filesystem import FileSensor
 from datetime import datetime, timedelta
+
+
+def request_api():
+    r = requests.get('https://economia.awesomeapi.com.br/last/USD-BRL')
+    content = json.loads(r.text)
+    high = content["USDBRL"]["high"]
+    low = content["USDBRL"]["low"]
+    var = content["USDBRL"]["varBid"]
+
+    df_dolar = pd.DataFrame(np.array([[high, low, var]]), columns = ['high', 'low', 'variance'])
+    df_dolar.to_csv('teste-airflow.csv', index=False)
+
+    return 
 
 
 default_args = {
