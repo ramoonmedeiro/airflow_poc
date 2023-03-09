@@ -65,3 +65,5 @@ with DAG(
         task_id='pegando_cotacao',
         python_callable=request_api
     )
+
+    sensor_api >> file_sensor >> cotacao
