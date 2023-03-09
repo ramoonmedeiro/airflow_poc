@@ -6,6 +6,7 @@ import numpy as np
 from airflow import DAG
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.sensors.filesystem import FileSensor
+from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 
 
@@ -58,4 +59,9 @@ with DAG(
         task_id = 'file_sensor',
         fs_conn_id = 'sensor_file',
         filepath = 'teste-airflow.csv'
+    )
+
+    cotacao = PythonOperator(
+        task_id='pegando_cotacao',
+        python_callable=request_api
     )
